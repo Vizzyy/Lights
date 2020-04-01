@@ -128,7 +128,7 @@ def custom():
     rgb = tuple(int(colorValue[i:i+2], 16) for i in (0, 2, 4))
     print('RGB =', rgb)
     lock.acquire()
-    threading.Thread(target=colorInstant(strip, Color(rgb[0], rgp[1], rgp[2]))).start()
+    threading.Thread(target=colorInstant(strip, Color(rgb[0], rgb[1], rgb[2]))).start()
     lock.release()
     return "200"
 
