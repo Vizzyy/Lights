@@ -107,7 +107,7 @@ def arrangement(p, x):
         rainbow(p)
     elif x == 'rainbowCycle':
         rainbowCycle(p)
-    elif x == 'clearWipe':
+    elif x == 'wipe':
         colorWipe(p, Color(0,0,0), 10)
     elif x == 'clear':
         colorInstant(p, Color(0,0,0))
