@@ -107,6 +107,8 @@ def arrangement(p, x):
         rainbow(p)
     elif x == 'rainbowCycle':
         rainbowCycle(p)
+    elif x == 'clearWipe':
+        colorWipe(p, Color(0,0,0), 10)
     elif x == 'clear':
         colorInstant(p, Color(0,0,0))
     else:
@@ -123,6 +125,5 @@ def home(section):
 def render_static(page_name):
     return flask.render_template('%s.html' % page_name)
 
-# Main program logic follows:
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
