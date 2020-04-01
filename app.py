@@ -6,7 +6,7 @@ import threading, time
 
 lock = threading.Lock()
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.config["DEBUG"] = True
 
 LED_COUNT      = 300
@@ -134,7 +134,7 @@ def custom():
 
 @app.route('/static/<string:page_name>/')
 def render_static(page_name):
-    return flask.render_template('%s.html' % page_name)
+    return render_template('%s.html' % page_name)
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
