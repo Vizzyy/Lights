@@ -124,7 +124,7 @@ def home(section):
 
 @app.route('/custom', methods=['GET'])
 def custom():
-    colorValue = request.args.get('colorValue').lstrip("%23")
+    colorValue = request.args.get('colorValue').lstrip("#")
     rgb = tuple(int(colorValue[i:i+2], 16) for i in (0, 2, 4))
     print('RGB =', rgb)
     lock.acquire()
