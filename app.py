@@ -1,7 +1,8 @@
 #!/usr/bin/python
 
 from neopixel import *
-import flask, threading, time
+from flask import *
+import threading, time
 
 lock = threading.Lock()
 
