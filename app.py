@@ -121,7 +121,7 @@ def home(section):
 
 @app.route('/static/<string:page_name>/')
 def render_static(page_name):
-    return flask.render_template('%s.html' % page_name)</string:page_name>
+    return flask.render_template('%s.html' % page_name)
 
 # Main program logic follows:
 if __name__ == '__main__':
