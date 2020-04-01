@@ -1,0 +1,29 @@
+<html>
+<title id="title">Lights</title>
+
+<body class="mainBackground">
+<div align="center">
+    <iframe width="0" height="0" border="0" name="dummyframe"
+            id="dummyframe" style="width:0; height:0; border:none"></iframe>
+    <div>
+        <br>
+        <div>
+            PORTAL
+            <div id="lightStatus1"></div>
+            <br><br><br><br>
+            <form action="/arrange/white" target="dummyframe">
+                <input type="hidden" name="entry" value="OPENED: OVERRIDE BY UI"/>
+                <br><input type="submit" value="OPEN" height="70" style="width: 100%;">
+            </form>
+            <form action="/arrange/clear" target="dummyframe">
+                <input type="hidden" name="entry" value="CLOSED: OVERRIDE BY UI"/>
+                <br><input type="submit" value="CLOSE" height="70" style="width: 100%;">
+            </form>
+        </div>
+    </div>
+
+    <br>
+</div>
+</body>
+
+</html>
