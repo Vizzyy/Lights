@@ -1,8 +1,8 @@
 import subprocess
 from flask import *
-import os
+from config import *
 
-LIGHTS_HOME = "/home/pi/Lights/"
+LIGHTS_HOME = get_home()
 app = Flask(__name__)
 app.config["DEBUG"] = True
 p = None

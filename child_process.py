@@ -1,9 +1,9 @@
 from neopixel import *
 import sys
 import time
-import os
+from config import *
 
-LED_COUNT = os.getenv('LED_COUNT')
+LED_COUNT = get_led_count()
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10  # DMA channel to use for generating signal (try 10)
