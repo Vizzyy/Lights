@@ -1,17 +1,22 @@
 import subprocess
 from flask import *
 from config import *
+from systemd import journal
+import logging
 
 LIGHTS_HOME = get_home()
 app = Flask(__name__)
 app.config["DEBUG"] = True
+logger = logging.getLogger('Lights')
+journald_handler = journal.JournalHandler()
+logger.addHandler(journald_handler)
 p = None
 
 @app.route('/arrange/<section>', methods=['GET'])
 def home(section):
     global p
     if p is not None:
-        print("Killing child process!")
+        logger.info("Killing child process!")
         p.kill()
         p = None
     else:
@@ -22,7 +27,7 @@ def home(section):
 def custom():
     colorValue = request.args.get('colorValue').lstrip("#")
     rgb = tuple(int(colorValue[i:i+2], 16) for i in (0, 2, 4))
-    print('RGB =', rgb)
+    logger.info('RGB =', rgb)
 
     return "200"
 
