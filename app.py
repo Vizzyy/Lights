@@ -1,15 +1,15 @@
 import subprocess
 from flask import *
 from config import *
-from systemd import journal
+# from systemd import journal
 import logging
 
 LIGHTS_HOME = get_home()
 app = Flask(__name__)
 app.config["DEBUG"] = True
 logger = logging.getLogger('Lights')
-journald_handler = journal.JournalHandler()
-logger.addHandler(journald_handler)
+# journald_handler = journal.JournalHandler()
+# logger.addHandler(journald_handler)
 p = None
 
 @app.route('/arrange/<section>', methods=['GET'])
