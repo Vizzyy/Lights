@@ -6,8 +6,6 @@ import threading, time
 
 lock = threading.Lock()
 
-stop = False
-
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -23,15 +21,11 @@ strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, 
 strip.begin()
 
 def colorInstant(strip, color):
-    global stop
-    stop = False
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
     strip.show()
 
 def colorWipe(strip, color, wait_ms=50):
-    global stop
-    stop = False
     """Wipe color across display a pixel at a time."""
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, color)
@@ -39,8 +33,6 @@ def colorWipe(strip, color, wait_ms=50):
         time.sleep(wait_ms/1000.0)
 
 def theaterChase(strip, color, wait_ms=50, iterations=10):
-    global stop
-    stop = False
     """Movie theater light style chaser animation."""
     for j in range(iterations):
         for q in range(3):
@@ -52,8 +44,6 @@ def theaterChase(strip, color, wait_ms=50, iterations=10):
                 strip.setPixelColor(i+q, 0)
 
 def wheel(pos):
-    global stop
-    stop = False
     """Generate rainbow colors across 0-255 positions."""
     if pos < 85:
         return Color(pos * 3, 255 - pos * 3, 0)
@@ -64,21 +54,15 @@ def wheel(pos):
         pos -= 170
         return Color(0, pos * 3, 255 - pos * 3)
 
-def rainbow(strip, wait_ms=20, iterations=200):
-    global stop
-    stop = False
+def rainbow(strip, wait_ms=20, iterations=1):
     """Draw rainbow that fades across all pixels at once."""
     for j in range(256*iterations):
-        if stop:
-            break
         for i in range(strip.numPixels()):
             strip.setPixelColor(i, wheel((i+j) & 255))
         strip.show()
         time.sleep(wait_ms/1000.0)
 
 def rainbowCycle(strip, wait_ms=20, iterations=5):
-    global stop
-    stop = False
     """Draw rainbow that uniformly distributes itself across all pixels."""
     for j in range(256*iterations):
         for i in range(strip.numPixels()):
@@ -87,8 +71,6 @@ def rainbowCycle(strip, wait_ms=20, iterations=5):
         time.sleep(wait_ms/1000.0)
 
 def theaterChaseRainbow(strip, wait_ms=50):
-    global stop
-    stop = False
     """Rainbow movie theater light style chaser animation."""
     for j in range(256):
         for q in range(3):
@@ -100,7 +82,6 @@ def theaterChaseRainbow(strip, wait_ms=50):
                 strip.setPixelColor(i+q, 0)
 
 def arrangement(p, x):
-    global stop
     if x == 'wipeGreen':
         colorWipe(p, Color(255, 0, 0), 10)
     elif x == 'wipeRed':
@@ -130,7 +111,6 @@ def arrangement(p, x):
     elif x == 'wipe':
         colorWipe(p, Color(0,0,0), 10)
     elif x == 'clear':
-        stop = True
         colorInstant(p, Color(0,0,0))
     else:
         print("")
