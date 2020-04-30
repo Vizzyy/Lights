@@ -15,12 +15,8 @@ p = None
 @app.route('/arrange/<section>', methods=['GET'])
 def home(section):
     global p
-    if p is not None:
-        logger.info("Killing child process!")
-        p.kill()
-        p = None
-    else:
-        p = subprocess.Popen("exec python " + LIGHTS_HOME + "child_process.py " + section, shell=True)
+    p.kill()
+    p = subprocess.Popen("exec python " + LIGHTS_HOME + "child_process.py " + section, shell=True)
     return "<h1>Indoor Lights!</h1><p>"+str(section)+"</p>"
 
 @app.route('/custom', methods=['GET'])
