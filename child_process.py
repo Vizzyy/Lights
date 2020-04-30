@@ -1,8 +1,9 @@
 from neopixel import *
 import sys
 import time
+import os
 
-LED_COUNT = 300
+LED_COUNT = os.getenv('LED_COUNT')
 LED_PIN = 18  # GPIO pin connected to the pixels (18 uses PWM!).
 LED_FREQ_HZ = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA = 10  # DMA channel to use for generating signal (try 10)
@@ -61,7 +62,7 @@ def colorWipe(strip, color, wait_ms=50):
         time.sleep(wait_ms / 1000.0)
 
 
-def theaterChase(strip, color, wait_ms=50, iterations=10):
+def theaterChase(strip, color, wait_ms=50, iterations=100):
     """Movie theater light style chaser animation."""
     for j in range(iterations):
         for q in range(3):
@@ -85,7 +86,7 @@ def wheel(pos):
         return Color(0, pos * 3, 255 - pos * 3)
 
 
-def rainbow(strip, wait_ms=20, iterations=100):
+def rainbow(strip, wait_ms=20, iterations=1000):
     """Draw rainbow that fades across all pixels at once."""
     for j in range(256 * iterations):
         for i in range(strip.numPixels()):
@@ -94,7 +95,7 @@ def rainbow(strip, wait_ms=20, iterations=100):
         time.sleep(wait_ms / 1000.0)
 
 
-def rainbowCycle(strip, wait_ms=20, iterations=100):
+def rainbowCycle(strip, wait_ms=20, iterations=1000):
     """Draw rainbow that uniformly distributes itself across all pixels."""
     for j in range(256 * iterations):
         for i in range(strip.numPixels()):
