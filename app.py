@@ -14,7 +14,7 @@ def home(section):
         print("Killing child process!")
         p.kill()
     else:
-        p = subprocess.Popen(f"exec python {LIGHTS_HOME}child_process.py " + section, shell=True)
+        p = subprocess.Popen(f"exec python {LIGHTS_HOME}child_process.py {section}", shell=True)
     return "<h1>Indoor Lights!</h1><p>"+str(section)+"</p>"
 
 @app.route('/custom', methods=['GET'])
