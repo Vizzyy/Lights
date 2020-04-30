@@ -2,7 +2,7 @@ import subprocess
 from flask import *
 import os
 
-LIGHTS_HOME = os.getenv('LIGHTS_HOME')
+LIGHTS_HOME = "/home/pi/Lights/"
 app = Flask(__name__)
 app.config["DEBUG"] = True
 p = None
