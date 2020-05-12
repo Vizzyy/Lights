@@ -1,5 +1,5 @@
 <html>
-<title id="title">Lights</title>
+<title id="title">{{ context }}</title>
 
 <head>
     <style>
@@ -20,52 +20,25 @@
     <iframe width="0" height="0" border="0" name="dummyframe" id="dummyframe" style="width:0; height:0; border:none"></iframe>
     <div>
         <div>
-            <form action="/arrange/clear" target="dummyframe">
+            <form action="{{ context }}/arrange/clear" target="dummyframe">
                 <br><input type="submit" value="CLEAR">
             </form>
-            <form action="/arrange/wipe" target="dummyframe">
-                <br><input type="submit" value="wipe">
-            </form>
-            <form action="/arrange/white" target="dummyframe">
+            <form action="{{ context }}/arrange/white" target="dummyframe">
                 <br><input type="submit" value="WHITE">
             </form>
-            <form action="/arrange/green" target="dummyframe">
+            <form action="{{ context }}/arrange/green" target="dummyframe">
                 <br><input type="submit" value="GREEN">
             </form>
-            <form action="/arrange/blue" target="dummyframe">
+            <form action="{{ context }}/arrange/blue" target="dummyframe">
                 <br><input type="submit" value="BLUE">
             </form>
-            <form action="/arrange/red" target="dummyframe">
+            <form action="{{ context }}/arrange/red" target="dummyframe">
                 <br><input type="submit" value="RED">
             </form>
-            <form action="/arrange/wipeWhite" target="dummyframe">
-                <br><input type="submit" value="wipeWhite">
-            </form>
-            <form action="/arrange/wipeBlue" target="dummyframe">
-                <br><input type="submit" value="wipeBlue">
-            </form>
-            <form action="/arrange/wipeRed" target="dummyframe">
-                <br><input type="submit" value="wipeRed">
-            </form>
-            <form action="/arrange/wipeGreen" target="dummyframe">
-                <br><input type="submit" value="wipeGreen">
-            </form>
-            <form action="/arrange/chaseWhite" target="dummyframe">
-                <br><input type="submit" value="chaseWhite">
-            </form>
-            <form action="/arrange/chaseBlue" target="dummyframe">
-                <br><input type="submit" value="chaseBlue">
-            </form>
-            <form action="/arrange/chaseGreen" target="dummyframe">
-                <br><input type="submit" value="chaseGreen">
-            </form>
-            <form action="/arrange/rainbow" target="dummyframe">
-                <br><input type="submit" value="rainbow">
-            </form>
-            <form action="/arrange/rainbowCycle" target="dummyframe">
+            <form action="{{ context }}/arrange/rainbowCycle" target="dummyframe">
                 <br><input type="submit" value="rainbowCycle">
             </form>
-            <form action="/static/custom/">
+            <form action="{{ context }}/custom/">
                 <br><input type="submit" value="Custom">
             </form>
         </div>
