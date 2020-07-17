@@ -33,7 +33,7 @@ def custom():
         global p
         if p is not None:
             p.kill()
-        p = subprocess.Popen(f"exec python {LIGHTS_HOME}child_process.py custom {rgb[0]} {rgb[1]} {rgb[2]}", shell=True)
+        p = subprocess.Popen(f"exec python {LIGHTS_HOME}child_process.py custom {str(rgb[0])} {str(rgb[1])} {str(rgb[2])}", shell=True)
 
     return render_template(FILE_NAME_CUSTOM, context=get_context())
 
