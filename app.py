@@ -23,7 +23,7 @@ def home(section):
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
-@bp.route('/custom', methods=['GET'])
+@bp.route('/custom/', methods=['GET'])
 def custom():
     if request.args.get('colorValue'):
         color_value = request.args.get('colorValue').lstrip("#")
