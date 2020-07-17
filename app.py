@@ -25,13 +25,17 @@ def home(section):
 
 @bp.route('/custom', methods=['GET'])
 def custom():
-    try:
-        colorValue = request.args.get('colorValue').lstrip("#")
-        rgb = tuple(int(colorValue[i:i + 2], 16) for i in (0, 2, 4))
-        logger.info('RGB =', rgb)
-    except Exception:
-        print("oops")
-    return "200"
+    if request.args.get('colorValue'):
+        color_value = request.args.get('colorValue').lstrip("#")
+        print(color_value)
+        rgb = tuple(int(color_value[i:i + 2], 16) for i in (0, 2, 4))
+        print(rgb)
+        global p
+        if p is not None:
+            p.kill()
+        p = subprocess.Popen(f"exec python {LIGHTS_HOME}child_process.py custom {rgb[0]} {rgb[1]} {rgb[2]}", shell=True)
+
+    return render_template(FILE_NAME_CUSTOM, context=get_context())
 
 
 @app.route('/favicon.ico')

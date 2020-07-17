@@ -14,6 +14,7 @@ LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 strip.begin()
 
+
 def arrangement(p, x):
     if x == 'wipeGreen':
         colorWipe(p, Color(255, 0, 0), 10)
@@ -34,19 +35,20 @@ def arrangement(p, x):
     elif x == 'chaseWhite':
         theaterChase(p, Color(127, 127, 127))
     elif x == 'chaseGreen':
-        theaterChase(p, Color(127,   0,   0))
+        theaterChase(p, Color(127, 0, 0))
     elif x == 'chaseBlue':
-        theaterChase(p, Color(  0,   0, 127))
+        theaterChase(p, Color(0, 0, 127))
     elif x == 'rainbow':
         rainbow(p)
     elif x == 'rainbowCycle':
         rainbowCycle(p)
     elif x == 'wipe':
-        colorWipe(p, Color(0,0,0), 10)
+        colorWipe(p, Color(0, 0, 0), 10)
     elif x == 'clear':
-        colorInstant(p, Color(0,0,0))
+        colorInstant(p, Color(0, 0, 0))
     else:
         print("No option selected...")
+
 
 def colorInstant(strip, color):
     for i in range(strip.numPixels()):
@@ -118,4 +120,7 @@ def theaterChaseRainbow(strip, wait_ms=50):
 
 if __name__ == '__main__':
     print(sys.argv)
-    arrangement(strip, sys.argv[1])
+    if sys.argv[1] == "custom":
+        colorInstant(strip, Color(sys.argv[2], sys.argv[3], sys.argv[4]))
+    else:
+        arrangement(strip, sys.argv[1])
