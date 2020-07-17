@@ -35,7 +35,7 @@ def custom():
             p.kill()
         p = subprocess.Popen(
             "exec python " + LIGHTS_HOME + "child_process.py custom "
-            + str(rgb[0]) + " " + str(rgb[1]) + " " + str(rgb[2]),
+            + str(rgb[1]) + " " + str(rgb[0]) + " " + str(rgb[2]),
             shell=True)
 
     return render_template(FILE_NAME_CUSTOM, context=get_context())

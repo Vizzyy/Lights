@@ -121,6 +121,6 @@ def theaterChaseRainbow(strip, wait_ms=50):
 if __name__ == '__main__':
     print(sys.argv)
     if sys.argv[1] == "custom":
-        colorInstant(strip, Color(sys.argv[2], sys.argv[3], sys.argv[4]))
+        colorInstant(strip, Color(int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])))
     else:
         arrangement(strip, sys.argv[1])
