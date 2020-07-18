@@ -21,11 +21,6 @@ c = rpyc.connect("localhost", REMOTE_PORT)
 stop = False
 
 
-def rainbow_inner(j):
-    for i in range(get_led_count()):
-        c.root.exposed_set_pixel(i, c.root.exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
-
-
 def exposed_wheel(pos):
     if pos < 85:
         return Color(pos * 3, 255 - pos * 3, 0)
@@ -44,7 +39,7 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
             # print("call root exposed set pixel "+ str(i))
             if stop:
                 return
-            c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / 150()) + j) & 255))
+            c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / 150) + j) & 255))
         # c.root.exposed_show_pixels()
         # time.sleep(wait_ms / 1000.0)
 
