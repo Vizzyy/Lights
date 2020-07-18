@@ -86,7 +86,7 @@ class PixelStrip(rpyc.Service):
         time.sleep(duration)
 
     def rainbow_cycle(self, wait):
-        for j in range(255):
+        for j in range(255 * 1000):
             for i in range(self.LED_COUNT):
                 pixel_index = (i * 256 // self.LED_COUNT) + j
                 self.exposed_strip[i] = self.wheel(pixel_index & 255)
