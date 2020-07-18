@@ -112,6 +112,9 @@ class PixelStrip(rpyc.Service):
     def exposed_set_pixel(self, pixel_position, color):
         print("Setting pixel "+ str(pixel_position)+" as "+str(color))
         self.exposed_strip.setPixelColor(pixel_position, color)
+
+    def exposed_show_pixels(self):
+        print("Showing pixel strip")
         self.exposed_strip.show()
 
     def theater_chase_rainbow(self, wait_ms=50):
