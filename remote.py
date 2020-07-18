@@ -99,6 +99,7 @@ class PixelStrip(rpyc.Service):
         for j in range(256 * iterations):
             for i in range(self.exposed_strip.numPixels()):
                 self.exposed_strip.setPixelColor(i, self.wheel((int(i * 256 / self.exposed_strip.numPixels()) + j) & 255))
+                print(self.exposed_exit)
                 if self.exposed_exit:
                     return
             self.exposed_strip.show()
