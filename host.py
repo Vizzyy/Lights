@@ -22,6 +22,7 @@ def home(section):
     if section.lower() == "clear":
         print("section: "+section)
         c.root.exposed_exit = True
+        print(c.root.exposed_check_exit())
     else:
         c.root.exposed_arrangement(section)
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"

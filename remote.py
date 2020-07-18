@@ -16,6 +16,10 @@ class PixelStrip(rpyc.Service):
     exposed_strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     exposed_strip.begin()
 
+    def exposed_check_exit(self):
+        print(self.exposed_exit)
+        return self.exposed_exit
+
     def exposed_arrangement(self, x):
         self.exposed_exit = False
         if x == 'wipeGreen':
