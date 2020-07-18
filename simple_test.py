@@ -54,7 +54,7 @@ def rainbow_cycle(wait):
             pixel_index = (i * 256 // num_pixels) + j
             pixels[i] = wheel(pixel_index & 255)
         pixels.show()
-        thread = threading.Thread(target=sleep_function)
+        thread = threading.Thread(target=sleep_function(wait))
         thread.start()
         thread.join()
 
