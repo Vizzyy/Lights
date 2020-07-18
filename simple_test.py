@@ -1,6 +1,5 @@
 # Simple test for NeoPixels on Raspberry Pi
 import threading
-
 import time
 import board
 import neopixel
