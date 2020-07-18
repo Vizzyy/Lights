@@ -81,7 +81,7 @@ class PixelStrip(rpyc.Service):
                 if self.exposed_exit:
                     return
 
-    def expose_wheel(self, pos):
+    def exposed_wheel(self, pos):
         if pos < 85:
             return Color(pos * 3, 255 - pos * 3, 0)
         elif pos < 170:
