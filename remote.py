@@ -121,6 +121,6 @@ class PixelStrip(rpyc.Service):
 
 if __name__ == "__main__":
     from rpyc.utils.server import ThreadedServer
-    t = ThreadedServer(PixelStrip, port=REMOTE_PORT)
+    t = ThreadedServer(PixelStrip(), port=REMOTE_PORT)
     print("Opened socket on port: "+str(REMOTE_PORT))
     t.start()
