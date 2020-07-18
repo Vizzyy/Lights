@@ -30,7 +30,7 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
         for i in range(get_led_count()):
             c.root.exposed_set_pixel(i, c.root.exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
         c.root.exposed_show_pixels()
-        time.sleep(wait_ms / 1000.0)
+        # time.sleep(wait_ms / 1000.0)
 
 
 @bp.route('/arrange/<section>', methods=['GET'])
