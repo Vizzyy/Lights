@@ -110,7 +110,7 @@ class PixelStrip(rpyc.Service):
             time.sleep(wait_ms / 1000.0)
 
     def exposed_set_pixel(self, pixel_position, color):
-        print("Setting pixel "+ pixel_position+" as "+str(color))
+        print("Setting pixel "+ str(pixel_position)+" as "+str(color))
         self.exposed_strip.setPixelColor(pixel_position, color)
         self.exposed_strip.show()
 
