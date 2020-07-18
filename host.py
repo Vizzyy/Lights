@@ -19,7 +19,11 @@ c = rpyc.connect("localhost", REMOTE_PORT)
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
-    c.root.exposed_arrangement(section)
+    if section.lower() == "clear":
+        print("section: "+section)
+        c.root.exposed_exit = True
+    else:
+        c.root.exposed_arrangement(section)
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 

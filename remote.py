@@ -12,11 +12,12 @@ class PixelStrip(rpyc.Service):
     LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
     LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
     LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
-
+    exposed_exit = False
     exposed_strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
     exposed_strip.begin()
 
     def exposed_arrangement(self, x):
+        self.exposed_exit = False
         if x == 'wipeGreen':
             self.color_wipe(Color(255, 0, 0), 10)
         elif x == 'wipeRed':
@@ -70,6 +71,8 @@ class PixelStrip(rpyc.Service):
                 time.sleep(wait_ms / 1000.0)
                 for i in range(0, self.exposed_strip.numPixels(), 3):
                     self.exposed_strip.setPixelColor(i + q, 0)
+                if self.exposed_exit:
+                    return
 
     def wheel(self, pos):
         if pos < 85:
@@ -86,6 +89,8 @@ class PixelStrip(rpyc.Service):
         for j in range(256 * iterations):
             for i in range(self.exposed_strip.numPixels()):
                 self.exposed_strip.setPixelColor(i, self.wheel((i + j) & 255))
+                if self.exposed_exit:
+                    return
             self.exposed_strip.show()
             time.sleep(wait_ms / 1000.0)
 
@@ -94,6 +99,8 @@ class PixelStrip(rpyc.Service):
         for j in range(256 * iterations):
             for i in range(self.exposed_strip.numPixels()):
                 self.exposed_strip.setPixelColor(i, self.wheel((int(i * 256 / self.exposed_strip.numPixels()) + j) & 255))
+                if self.exposed_exit:
+                    return
             self.exposed_strip.show()
             time.sleep(wait_ms / 1000.0)
 
@@ -107,6 +114,8 @@ class PixelStrip(rpyc.Service):
                 time.sleep(wait_ms / 1000.0)
                 for i in range(0, self.exposed_strip.numPixels(), 3):
                     self.exposed_strip.setPixelColor(i + q, 0)
+                if self.exposed_exit:
+                    return
 
 
 if __name__ == "__main__":
