@@ -81,7 +81,7 @@ class PixelStrip(rpyc.Service):
                 if self.exposed_exit:
                     return
 
-    def wheel(self, pos):
+    def expose_wheel(self, pos):
         if pos < 85:
             return Color(pos * 3, 255 - pos * 3, 0)
         elif pos < 170:
@@ -106,11 +106,13 @@ class PixelStrip(rpyc.Service):
         for j in range(256 * iterations):
             for i in range(self.exposed_strip.numPixels()):
                 self.exposed_strip.setPixelColor(i, self.wheel((int(i * 256 / self.exposed_strip.numPixels()) + j) & 255))
-                if self.exposed_exit:
-                    return
             self.exposed_strip.show()
-            print(self.exposed_exit)
             time.sleep(wait_ms / 1000.0)
+
+    def exposed_set_pixel(self, pixel_position, color):
+        print("Setting pixel "+ pixel_position+" as "+str(color))
+        self.exposed_strip.setPixelColor(pixel_position, color)
+        self.exposed_strip.show()
 
     def theater_chase_rainbow(self, wait_ms=50):
         """Rainbow movie theater light style chaser animation."""

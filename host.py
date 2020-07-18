@@ -1,5 +1,7 @@
 import os
 import subprocess
+import threading
+
 from flask import *
 from config import *
 import logging
@@ -17,15 +19,23 @@ p = None
 c = rpyc.connect("localhost", REMOTE_PORT)
 
 
+def rainbow_inner(j):
+    for i in range(get_led_count()):
+        c.root.exposed_set_pixel(i, c.root.exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
+
+
+def rainbow_cycle(wait_ms=20, iterations=1000):
+    for j in range(256 * iterations):
+        timer = threading.Timer(wait_ms / 1000.0, rainbow_inner(j))  # non blocking wait
+        timer.start()
+
+
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
-    if section.lower() == "clear":
-        print("section: "+section)
-        c.root.exposed_set_exit()
-        print(c.root.exposed_check_exit())
-        rpyc.async_(c.root.exposed_arrangement(section))
+    if section == "rainbowCycle":
+        rainbow_cycle()
     else:
-        rpyc.async_(c.root.exposed_arrangement(section))
+        c.root.exposed_arrangement(section)
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
