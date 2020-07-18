@@ -28,6 +28,7 @@ def rainbow_inner(j):
 def rainbow_cycle(wait_ms=20, iterations=1000):
     for j in range(256 * iterations):
         for i in range(get_led_count()):
+            print("call root exposed set pixel")
             c.root.exposed_set_pixel(i, c.root.exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
         c.root.exposed_show_pixels()
         # time.sleep(wait_ms / 1000.0)
