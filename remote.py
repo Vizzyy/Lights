@@ -54,7 +54,7 @@ class PixelStrip(rpyc.Service):
         elif x == 'wipe':
             self.color_wipe(Color(0, 0, 0), 10)
         elif x == 'clear':
-            self.color_wipe(Color(0, 0, 0))
+            self.color_instant(Color(0, 0, 0))
         else:
             print("No option selected...")
 
@@ -78,8 +78,6 @@ class PixelStrip(rpyc.Service):
                 time.sleep(wait_ms / 1000.0)
                 for i in range(0, self.exposed_strip.numPixels(), 3):
                     self.exposed_strip.setPixelColor(i + q, 0)
-                if self.exposed_exit:
-                    return
 
     def exposed_wheel(self, pos):
         if pos < 85:
@@ -96,8 +94,6 @@ class PixelStrip(rpyc.Service):
         for j in range(256 * iterations):
             for i in range(self.exposed_strip.numPixels()):
                 self.exposed_strip.setPixelColor(i, self.wheel((i + j) & 255))
-                if self.exposed_exit:
-                    return
             self.exposed_strip.show()
             time.sleep(wait_ms / 1000.0)
 
@@ -128,8 +124,6 @@ class PixelStrip(rpyc.Service):
                 time.sleep(wait_ms / 1000.0)
                 for i in range(0, self.exposed_strip.numPixels(), 3):
                     self.exposed_strip.setPixelColor(i + q, 0)
-                if self.exposed_exit:
-                    return
 
 
 if __name__ == "__main__":
