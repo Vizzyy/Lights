@@ -52,7 +52,8 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
     global stop
-    stop = True
+    if section == "clear":
+        stop = True
     if section == "rainbowCycle":
         rainbow_cycle()
     else:
