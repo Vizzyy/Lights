@@ -44,7 +44,7 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
             # print("call root exposed set pixel "+ str(i))
             if stop:
                 return
-            c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
+            c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / 150()) + j) & 255))
         # c.root.exposed_show_pixels()
         # time.sleep(wait_ms / 1000.0)
 
