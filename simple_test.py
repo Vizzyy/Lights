@@ -1,4 +1,6 @@
 # Simple test for NeoPixels on Raspberry Pi
+import threading
+
 import time
 import board
 import neopixel
@@ -42,13 +44,20 @@ def wheel(pos):
     return (r, g, b) if ORDER in (neopixel.RGB, neopixel.GRB) else (r, g, b, 0)
 
 
+def sleep_function(duration):
+    time.sleep(duration)
+
+
 def rainbow_cycle(wait):
+    thread = threading.Thread(target=sleep_function)
     for j in range(255):
         for i in range(num_pixels):
             pixel_index = (i * 256 // num_pixels) + j
             pixels[i] = wheel(pixel_index & 255)
         pixels.show()
-        time.sleep(wait)
+        # time.sleep(wait)
+        thread.start()
+        thread.join()
 
 
 while True:
