@@ -21,37 +21,16 @@ c = rpyc.connect("localhost", REMOTE_PORT)
 stop = False
 
 
-def exposed_wheel(pos):
-    if pos < 85:
-        return Color(pos * 3, 255 - pos * 3, 0)
-    elif pos < 170:
-        pos -= 85
-        return Color(255 - pos * 3, 0, pos * 3)
-    else:
-        pos -= 170
-        return Color(0, pos * 3, 255 - pos * 3)
-
-
-def rainbow_cycle(iterations=1000):
-    global stop
-    for j in range(256 * iterations):
-        for i in range(get_led_count()):
-            # print("call root exposed set pixel "+ str(i))
-            if stop:
-                return
-            c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
-        c.root.exposed_show_pixels()
-
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
-    global stop
-    if section == "clear":
-        stop = True
-    if section == "rainbowCycle":
-        rainbow_cycle()
-    else:
-        c.root.exposed_arrangement(section)
-    stop = False
+    # global stop
+    # if section == "clear":
+    #     stop = True
+    # if section == "rainbowCycle":
+    #     rainbow_cycle()
+    # else:
+    c.root.exposed_arrangement(section)
+    # stop = False
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
