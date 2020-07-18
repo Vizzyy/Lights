@@ -23,8 +23,9 @@ def home(section):
         print("section: "+section)
         c.root.exposed_set_exit()
         print(c.root.exposed_check_exit())
+        rpyc.async_(c.root.exposed_arrangement(section))
     else:
-        c.root.exposed_arrangement(section)
+        rpyc.async_(c.root.exposed_arrangement(section))
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 

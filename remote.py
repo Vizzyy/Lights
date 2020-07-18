@@ -50,7 +50,7 @@ class PixelStrip(rpyc.Service):
         elif x == 'rainbow':
             self.rainbow()
         elif x == 'rainbowCycle':
-            rpyc.async_(self.rainbow_cycle())
+            self.rainbow_cycle()
         elif x == 'wipe':
             self.color_wipe(Color(0, 0, 0), 10)
         elif x == 'clear':
