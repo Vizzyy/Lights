@@ -18,6 +18,7 @@ bp = Blueprint('application_context', __name__, template_folder='templates')
 logger = logging.getLogger('Lights')
 p = None
 c = rpyc.connect("localhost", REMOTE_PORT)
+stop = False
 
 
 def rainbow_inner(j):
@@ -37,9 +38,12 @@ def exposed_wheel(pos):
 
 
 def rainbow_cycle(wait_ms=20, iterations=1000):
+    global stop
     for j in range(256 * iterations):
         for i in range(get_led_count()):
             # print("call root exposed set pixel "+ str(i))
+            if stop:
+                return
             c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
         # c.root.exposed_show_pixels()
         # time.sleep(wait_ms / 1000.0)
@@ -47,10 +51,13 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
+    global stop
+    stop = True
     if section == "rainbowCycle":
         rainbow_cycle()
     else:
         c.root.exposed_arrangement(section)
+    stop = False
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
