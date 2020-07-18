@@ -20,6 +20,9 @@ class PixelStrip(rpyc.Service):
         print(self.exposed_exit)
         return self.exposed_exit
 
+    def exposed_set_exit(self):
+        self.exposed_exit = True
+
     def exposed_arrangement(self, x):
         self.exposed_exit = False
         if x == 'wipeGreen':
@@ -125,6 +128,8 @@ class PixelStrip(rpyc.Service):
 
 if __name__ == "__main__":
     from rpyc.utils.server import ThreadedServer
-    t = ThreadedServer(PixelStrip(), port=REMOTE_PORT)
+    t = ThreadedServer(PixelStrip(), port=REMOTE_PORT, protocol_config={
+        'allow_public_attrs': True,
+    })
     print("Opened socket on port: "+str(REMOTE_PORT))
     t.start()

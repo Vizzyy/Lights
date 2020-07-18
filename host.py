@@ -21,7 +21,7 @@ c = rpyc.connect("localhost", REMOTE_PORT)
 def home(section):
     if section.lower() == "clear":
         print("section: "+section)
-        c.root.exposed_exit = True
+        c.root.exposed_set_exit()
         print(c.root.exposed_check_exit())
     else:
         c.root.exposed_arrangement(section)
