@@ -32,7 +32,7 @@ def exposed_wheel(pos):
         return Color(0, pos * 3, 255 - pos * 3)
 
 
-def rainbow_cycle(wait_ms=20, iterations=1000):
+def rainbow_cycle(iterations=1000):
     global stop
     for j in range(256 * iterations):
         for i in range(get_led_count()):
@@ -40,7 +40,7 @@ def rainbow_cycle(wait_ms=20, iterations=1000):
             if stop:
                 return
             c.root.exposed_set_pixel(i, exposed_wheel((int(i * 256 / get_led_count()) + j) & 255))
-
+        c.root.exposed_show_pixels()
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
