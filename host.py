@@ -4,7 +4,6 @@ from flask import *
 from config import *
 import logging
 import rpyc
-from strip_functions import *
 
 
 LIGHTS_HOME = SOURCE_PATH
@@ -20,7 +19,7 @@ c = rpyc.connect("localhost", REMOTE_PORT)
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
-    arrangement(c.root.exposed_strip, section)
+    c.root.exposed_arrangement(section)
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
