@@ -1,3 +1,5 @@
+import math
+
 from neopixel import *
 import sys
 import time
@@ -11,6 +13,7 @@ LED_BRIGHTNESS = 255  # Set to 0 for darkest and 255 for brightest
 LED_INVERT = False  # True to invert the signal (when using NPN transistor level shift)
 LED_CHANNEL = 0  # set to '1' for GPIOs 13, 19, 41, 45 or 53
 
+# LED_COUNT = 150
 strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS, LED_CHANNEL)
 strip.begin()
 
@@ -38,6 +41,8 @@ def arrangement(p, x):
         theaterChase(p, Color(127, 0, 0))
     elif x == 'chaseBlue':
         theaterChase(p, Color(0, 0, 127))
+    elif x == 'twilight':
+        twilight_cycle(p)
     elif x == 'rainbow':
         rainbow(p)
     elif x == 'rainbowCycle':
@@ -88,7 +93,45 @@ def wheel(pos):
         return Color(0, pos * 3, 255 - pos * 3)
 
 
-def rainbow(strip, wait_ms=20, iterations=1000):
+print_string = []
+def twilight_wheel(pos):
+    """
+    pink = R:255 G:0 B:255
+    cyan = R:0 G:255 B:255
+
+    0 -> 300
+
+    at 0 red should be 255 and green 0
+    at 150 red should be 0 and green 0
+    at 300 red should be 0 and green 255
+
+
+    f(x) = x/255
+    f(
+
+    """
+    temp = 1.0 / 48.0
+    add_val = 150
+    if pos > 149:
+        add_val = 0
+    sin_pos = math.sin(temp * (pos + add_val))
+    cos_pos = math.sin(2 * temp * (pos + add_val))
+
+    r = int(sin_pos * 255)
+    if r < 0:
+        r = 0
+    g = int(cos_pos * 255)
+    if g < 0:
+        g = 0
+    b = 255
+
+    # print(r, g, b)
+    # print_string.append((r, g, b))
+    color = Color(r, g, b)
+    return color
+
+
+def rainbow(strip, wait_ms=20, iterations=10000):
     """Draw rainbow that fades across all pixels at once."""
     for j in range(256 * iterations):
         for i in range(strip.numPixels()):
@@ -97,7 +140,23 @@ def rainbow(strip, wait_ms=20, iterations=1000):
         time.sleep(wait_ms / 1000.0)
 
 
-def rainbowCycle(strip, wait_ms=20, iterations=1000):
+def twilight(strip, wait_ms=20, iterations=10000):
+    for i in range(strip.numPixels()):
+        strip.setPixelColor(i, twilight_wheel(i))
+    strip.show()
+
+
+def twilight_cycle(strip, wait_ms=20, iterations=10000):
+    for j in range(256 * iterations):
+        for i in range(strip.numPixels()):
+            strip.setPixelColor(i, twilight_wheel((int(i * 256 / strip.numPixels()) + j) & 255))
+        strip.show()
+        time.sleep(wait_ms / 1000.0)
+
+    strip.show()
+
+
+def rainbowCycle(strip, wait_ms=20, iterations=10000):
     """Draw rainbow that uniformly distributes itself across all pixels."""
     for j in range(256 * iterations):
         for i in range(strip.numPixels()):
@@ -124,3 +183,4 @@ if __name__ == '__main__':
         colorInstant(strip, Color(int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])))
     else:
         arrangement(strip, sys.argv[1])
+    print(print_string)

@@ -1,3 +1,4 @@
 Lights.iml
 config.py
 __pycache__/
+*pyc
