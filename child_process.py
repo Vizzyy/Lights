@@ -173,7 +173,7 @@ def rainbowCycle(strip, wait_ms=20, iterations=10000):
         position_math.append(int(i * 256 / strip.numPixels()))
 
     print("front-load color calculations")
-    for j in range(256 * iterations):
+    for j in range(256):
         temp_array = []
         for i in range(strip.numPixels()):
             temp_array.append(wheel((position_math[i] + j) & 255))
@@ -182,7 +182,7 @@ def rainbowCycle(strip, wait_ms=20, iterations=10000):
     print("beginning color execution")
     for j in range(256 * iterations):
         for i in range(strip.numPixels()):
-            strip.setPixelColor(i, pixel_colors_by_position[j][i])
+            strip.setPixelColor(i, pixel_colors_by_position[j % 256][i])
             strip.show()
             time.sleep(wait_ms / 1000.0)
             # print((i, pixel_colors_by_position[j][i]))
