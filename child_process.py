@@ -159,13 +159,7 @@ def twilight_cycle(strip, wait_ms=20, iterations=10000):
 
 def rainbowCycle(strip, wait_ms=20, iterations=10000):
     """Draw rainbow that uniformly distributes itself across all pixels."""
-    # for j in range(256 * iterations):
-    #     for i in range(strip.numPixels()):
-    #         strip.setPixelColor(i, wheel((int(i * 256 / strip.numPixels()) + j) & 255))
-    #     strip.show()
-    #     time.sleep(wait_ms / 1000.0)
     pixel_colors_by_position = []
-
     position_math = []
 
     print("front-load position calculations")
@@ -181,11 +175,12 @@ def rainbowCycle(strip, wait_ms=20, iterations=10000):
 
     print("beginning color execution")
     for j in range(256 * iterations):
+        j_pos = int(j % 256)
         for i in range(strip.numPixels()):
-            strip.setPixelColor(i, pixel_colors_by_position[j % 256][i])
-            strip.show()
-            time.sleep(wait_ms / 1000.0)
-            # print((i, pixel_colors_by_position[j][i]))
+            # Gain significant computational efficiency by front-loading calculations
+            strip.setPixelColor(i, pixel_colors_by_position[j_pos][i])
+        strip.show()
+        time.sleep(wait_ms / 1000.0)
 
 
 def theaterChaseRainbow(strip, wait_ms=50):
