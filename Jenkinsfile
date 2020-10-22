@@ -155,10 +155,11 @@ boolean curlState( String command, String status){
 boolean confirmDeployed() {
     boolean deployed1 = curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>")
     boolean deployed2 = curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
-    echo deployed1.and(deployed2)
-    echo deployed1
-    echo deployed2
-    echo deployed1 && deployed2
-    echo deployed1 & deployed2
-    return deployed1.and(deployed2)
+    boolean result1 = deployed1.and(deployed2)
+    boolean result2 = deployed1 && deployed2
+    boolean result3 = deployed1 & deployed2
+    echo "$result1"
+    echo "$result2"
+    echo "$result3"
+    return deployed1
 }
