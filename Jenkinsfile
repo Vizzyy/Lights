@@ -64,10 +64,11 @@ pipeline {
             steps {
                 script {
 
-                    if (!confirmDeployed())
+                    if (!confirmDeployed()) {
                         sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
                         sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
                         error("Failed to deploy.")
+                    }
 
                 }
             }
@@ -113,10 +114,12 @@ pipeline {
                     """
                     sh("ssh pi@carnivore.local '$cmd'")
                     sh("ssh pi@herbivore.local '$cmd'")
-                    if (!confirmDeployed())
+
+                    if (!confirmDeployed()) {
                         sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
                         sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
                         error("Failed to deploy.")
+                    }
                 }
             }
         }
@@ -152,6 +155,6 @@ boolean curlState( String command, String status){
 boolean confirmDeployed() {
     boolean deployed1 = curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>")
     boolean deployed2 = curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
-
+    echo deployed1.and(deployed2)
     return deployed1.and(deployed2)
 }
