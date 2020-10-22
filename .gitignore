@@ -2,3 +2,5 @@ Lights.iml
 config.py
 __pycache__/
 *pyc
+.DS_Store
+._.DS_Store
