@@ -8,7 +8,7 @@ Boolean deploymentCheckpoint = false
 String startCommand = """cd ~/Lights; \
 git stash; git pull origin master; \
 sudo systemctl restart lights; \
-sudo systemctl status lights;;"""
+sudo systemctl status lights;"""
 
 try {
     if (ISSUE_NUMBER)
