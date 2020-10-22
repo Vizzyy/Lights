@@ -93,7 +93,6 @@ def wheel(pos):
         return Color(0, pos * 3, 255 - pos * 3)
 
 
-print_string = []
 def twilight_wheel(pos):
     """
     pink = R:255 G:0 B:255
@@ -125,11 +124,19 @@ def twilight_wheel(pos):
         g = 0
     b = 255
 
-    # print(r, g, b)
-    # print_string.append((r, g, b))
     color = Color(r, g, b)
     return color
 
+
+def twilight_wheel2(pos):
+    if pos < 85:
+        return Color(pos * 3, 255 - pos * 3, 255)
+    elif pos < 170:
+        pos -= 85
+        return Color(255 - pos * 3, 0, 255)
+    else:
+        pos -= 170
+        return Color(0, pos * 3, 255)
 
 
 def rainbow(strip, wait_ms=20, iterations=10000):
@@ -160,7 +167,7 @@ def twilight_cycle(strip, wait_ms=20, iterations=10000):
     for j in range(256):
         temp_array = []
         for i in range(strip.numPixels()):
-            temp_array.append(twilight_wheel((position_math[i] + j) & 255))
+            temp_array.append(twilight_wheel2((position_math[i] + j) & 255))
         pixel_colors_by_position.append(temp_array)
 
     print("beginning color execution")
@@ -217,4 +224,3 @@ if __name__ == '__main__':
         colorInstant(strip, Color(int(sys.argv[2]), int(sys.argv[3]), int(sys.argv[4])))
     else:
         arrangement(strip, sys.argv[1])
-    print(print_string)
