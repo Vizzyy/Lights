@@ -148,8 +148,6 @@ boolean curlState( String command, String status){
 }
 
 boolean confirmDeployed() {
-    return curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle",
-            "<h1>/inside Lights!</h1><p>clear</p>")
-            && curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle",
-            "<h1>/outside Lights!</h1><p>clear</p>")
+    return curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>clear</p>") &&
+            curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>clear</p>")
 }
