@@ -50,7 +50,7 @@ pipeline {
                     if (env.Deploy == "true") {
                         deploymentCheckpoint = true;
                         sh("ssh pi@carnivore.local '$startCommand'")
-                        sh("ssh pi@herbivore.local '$cmd'")
+                        sh("ssh pi@herbivore.local '$startCommand'")
 
                     }
                 }
