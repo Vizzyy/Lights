@@ -20,7 +20,7 @@ def home(section):
     if p is not None:
         p.kill()
     p = subprocess.Popen("exec python3 " + LIGHTS_HOME + "child_process.py " + section, shell=True)
-    return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
+    return "<h1>"+get_context()+" Lights!</h1><p>" + str(section) + "</p>"
 
 
 @bp.route('/custom/', methods=['GET'])
