@@ -134,6 +134,7 @@ boolean curlState( String command, String status){
             def health = sh(script: command, returnStdout: true).trim()
             echo health
             if (health.toString().contains(status)) {
+                echo "Service running healthy."
                 return true
             }
         } catch (Exception e) {
@@ -144,6 +145,7 @@ boolean curlState( String command, String status){
         sleep time: i, unit: 'SECONDS'
 
     }
+    echo "Service failed to return healthy state."
     return false
 }
 
