@@ -12,7 +12,7 @@ bp = Blueprint('application_context', __name__, template_folder='templates')
 
 logger = logging.getLogger('Lights')
 p = None
-
+jhgfjhgfjhg
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
