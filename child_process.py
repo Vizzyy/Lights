@@ -141,20 +141,36 @@ def rainbow(strip, wait_ms=20, iterations=10000):
         time.sleep(wait_ms / 1000.0)
 
 
-def twilight(strip, wait_ms=20, iterations=10000):
+def twilight(strip):
     for i in range(strip.numPixels()):
         strip.setPixelColor(i, twilight_wheel(i))
     strip.show()
 
 
 def twilight_cycle(strip, wait_ms=20, iterations=10000):
-    for j in range(256 * iterations):
+    """Shades of blue through violet blended together in a continuous wave"""
+    pixel_colors_by_position = []
+    position_math = []
+
+    print("front-load position calculations")
+    for i in range(strip.numPixels()):
+        position_math.append(int(i * 256 / strip.numPixels()))
+
+    print("front-load color calculations")
+    for j in range(256):
+        temp_array = []
         for i in range(strip.numPixels()):
-            strip.setPixelColor(i, twilight_wheel((int(i * 256 / strip.numPixels()) + j) & 255))
+            temp_array.append(twilight_wheel((position_math[i] + j) & 255))
+        pixel_colors_by_position.append(temp_array)
+
+    print("beginning color execution")
+    for j in range(256 * iterations):
+        j_pos = int(j % 256)
+        for i in range(strip.numPixels()):
+            # Gain significant computational efficiency by front-loading calculations
+            strip.setPixelColor(i, pixel_colors_by_position[j_pos][i])
         strip.show()
         time.sleep(wait_ms / 1000.0)
-
-    strip.show()
 
 
 def rainbowCycle(strip, wait_ms=20, iterations=10000):
