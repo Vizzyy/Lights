@@ -118,7 +118,9 @@ pipeline {
                     if (!confirmDeployed()) {
                         sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
                         sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
-                        error("Failed to deploy.")
+                        error("Failed to roll back!!!.")
+                    } else {
+                        echo "Successfully rolled back."
                     }
                 }
             }
@@ -153,8 +155,7 @@ boolean curlState( String command, String status){
 }
 
 boolean confirmDeployed() {
-    boolean deployed1 = curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>")
-    boolean deployed2 = curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
-    boolean result = deployed1.and(deployed2)
-    return result
+    if (!curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>"))
+        return false
+    return curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
 }
