@@ -5,7 +5,10 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 
 String commitHash = ""
 Boolean deploymentCheckpoint = false
-String startCommand = "cd ~/Lights; git stash; git pull origin master; restartlights; statuslights;"
+String startCommand = """cd ~/Lights; \
+git stash; git pull origin master; \
+sudo systemctl restart lights; \
+sudo systemctl status lights;;"""
 
 try {
     if (ISSUE_NUMBER)
