@@ -6,11 +6,10 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 String commitHash = ""
 Boolean deploymentCheckpoint = false
 String startCommand = """
-    cd ~/Lights; 
-    git stash; git checkout master; 
-    git pull origin master; 
-    sudo systemctl restart lights; 
-    sudo systemctl status lights;
+    cd ~/Lights
+    git stash; git checkout master 
+    git pull origin master
+    sudo systemctl restart lights 
 """
 
 try {
@@ -21,11 +20,11 @@ try {
     echo "Building from jenkins job..."
 }
 
-def confirmDeployed() {
+boolean confirmDeployed() {
 
     Boolean deployed1 = false
     Boolean deployed2 = false
-    for (int i = 0; i < 12; i++) {
+    for (int i = 0; i < 5; i++) {
 
         try {
             def health = sh(
@@ -46,7 +45,10 @@ def confirmDeployed() {
 
     }
 
-    for (int i = 0; i < 12; i++) {
+    if (!deployed1)
+        return false
+
+    for (int i = 0; i < 5; i++) {
 
         try {
             def health = sh(
@@ -106,6 +108,7 @@ pipeline {
                         sh("ssh pi@carnivore.local '$startCommand'")
                         sh("ssh pi@herbivore.local '$startCommand'")
 
+
                     }
                 }
             }
@@ -118,7 +121,8 @@ pipeline {
                     if (!confirmDeployed())
                         error("Failed to deploy.")
 
-
+                    sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
+                    sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
                 }
             }
         }
@@ -155,17 +159,18 @@ pipeline {
                     commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
                     echo "Rolling back to previous successful image. Hash: $commitHash"
                     GString cmd = """
-                        cd ~/Lights;
-                        git stash; 
-                        git fetch --all;
-                        git checkout $commitHash; 
-                        sudo systemctl restart lights; 
-                        sudo systemctl status lights;
+                        cd ~/Lights
+                        git stash
+                        git fetch --all
+                        git checkout $commitHash 
+                        sudo systemctl restart lights 
                     """
                     sh("ssh pi@carnivore.local '$cmd'")
                     sh("ssh pi@herbivore.local '$cmd'")
                     if (!confirmDeployed())
                         error("Failed to deploy.")
+                    sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
+                    sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
                 }
             }
         }
