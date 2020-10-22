@@ -130,13 +130,13 @@ def twilight_wheel(pos):
 
 def twilight_wheel2(pos):
     if pos <= 85:
-        return Color(pos * 3, 255 - pos * 3, 245)
+        return Color(pos * 2, 255 - pos * 2, 255)
     elif pos <= 170:
         pos -= 85
-        return Color(255 - pos * 3, 0, 245)
+        return Color(255 - pos * 2, 0, 255)
     else:
         pos -= 170
-        return Color(0, pos * 3, 245)
+        return Color(0, pos * 2, 255)
 
 
 def rainbow(strip, wait_ms=20, iterations=10000):
