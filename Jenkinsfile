@@ -113,7 +113,7 @@ pipeline {
                             $startContainerCommand$commitHash
                         """
                         sh("ssh pi@carnivore.local '$cmd'")
-                        sh("ssh pi@herbivore.local '$cmd'")
+//                        sh("ssh pi@herbivore.local '$cmd'")
 
                     }
                 }
@@ -127,26 +127,26 @@ pipeline {
 
                         Boolean deployed1 = false
                         Boolean deployed2 = false
-                        for (int i = 0; i < 12; i++) {
-
-                            try {
-                                def health = sh(
-                                        script: "curl http://herbivore:5000/outside",
-                                        returnStdout: true
-                                ).trim()
-                                echo health
-                                if (health != "Found. Redirecting to /login") {
-                                    deployed = true
-                                    break
-                                }
-                            } catch (Exception e) {
-                                echo "Could not parse health check response."
-                                e.printStackTrace()
-                            }
-
-                            sleep time: i, unit: 'SECONDS'
-
-                        }
+//                        for (int i = 0; i < 12; i++) {
+//
+//                            try {
+//                                def health = sh(
+//                                        script: "curl http://herbivore:5000/outside",
+//                                        returnStdout: true
+//                                ).trim()
+//                                echo health
+//                                if (health != "Found. Redirecting to /login") {
+//                                    deployed1 = true
+//                                    break
+//                                }
+//                            } catch (Exception e) {
+//                                echo "Could not parse health check response."
+//                                e.printStackTrace()
+//                            }
+//
+//                            sleep time: i, unit: 'SECONDS'
+//
+//                        }
 
                         for (int i = 0; i < 12; i++) {
 
@@ -157,7 +157,7 @@ pipeline {
                                 ).trim()
                                 echo health
                                 if (health != "Found. Redirecting to /login") {
-                                    deployed = true
+                                    deployed2 = true
                                     break
                                 }
                             } catch (Exception e) {
@@ -168,9 +168,9 @@ pipeline {
                             sleep time: i, unit: 'SECONDS'
 
                         }
-
-                        if (!(deployed1 && deployed2))
-                            error("Failed to deploy.")
+//
+//                        if (!(deployed1 && deployed2))
+//                            error("Failed to deploy.")
 
 
                     }
@@ -200,30 +200,30 @@ pipeline {
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
             }
         }
-        failure {
-            script {
-                if (env.Build == "true" && ISSUE_NUMBER) {
-                    prTools.comment(ISSUE_NUMBER,
-                            """{
-                                "body": "Jenkins failed during $currentBuild.displayName"
-                            }""",
-                            serviceName)
-                }
-                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                    commitHash = commitHash.substring(0, 7)
-                    echo "Rolling back to previous successful image. Hash: $commitHash"
-                    def cmd = """
-                            docker stop $serviceName;
-                            docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand$commitHash
-                        """
-                    sh("ssh pi@carnivore.local '$cmd'")
-                    sh("ssh pi@herbivore.local '$cmd'")
-                }
-            }
-        }
+//        failure {
+//            script {
+//                if (env.Build == "true" && ISSUE_NUMBER) {
+//                    prTools.comment(ISSUE_NUMBER,
+//                            """{
+//                                "body": "Jenkins failed during $currentBuild.displayName"
+//                            }""",
+//                            serviceName)
+//                }
+//                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+//                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+//                    commitHash = commitHash.substring(0, 7)
+//                    echo "Rolling back to previous successful image. Hash: $commitHash"
+//                    def cmd = """
+//                            docker stop $serviceName;
+//                            docker rm $serviceName;
+//                            docker rmi -f \$(docker images -a -q);
+//                            $startContainerCommand$commitHash
+//                        """
+//                    sh("ssh pi@carnivore.local '$cmd'")
+//                    sh("ssh pi@herbivore.local '$cmd'")
+//                }
+//            }
+//        }
         cleanup { // Cleanup post-flow always executes last
             deleteDir()
         }

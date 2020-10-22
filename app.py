@@ -19,7 +19,7 @@ def home(section):
     global p
     if p is not None:
         p.kill()
-    p = subprocess.Popen("exec python " + LIGHTS_HOME + "child_process.py " + section, shell=True)
+    p = subprocess.Popen("exec python3 " + LIGHTS_HOME + "child_process.py " + section, shell=True)
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
@@ -34,7 +34,7 @@ def custom():
         if p is not None:
             p.kill()
         p = subprocess.Popen(
-            "exec python " + LIGHTS_HOME + "child_process.py custom "
+            "exec python3 " + LIGHTS_HOME + "child_process.py custom "
             + str(rgb[1]) + " " + str(rgb[0]) + " " + str(rgb[2]),
             shell=True)
 
