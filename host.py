@@ -1,10 +1,15 @@
 import os
 import subprocess
+import threading
+import time
+from neopixel import *
 from flask import *
 from config import *
 import logging
+import rpyc
 
-LIGHTS_HOME = get_home()
+
+LIGHTS_HOME = SOURCE_PATH
 app = Flask(__name__)
 app.config["DEBUG"] = True
 
@@ -12,14 +17,20 @@ bp = Blueprint('application_context', __name__, template_folder='templates')
 
 logger = logging.getLogger('Lights')
 p = None
+c = rpyc.connect("localhost", REMOTE_PORT)
+stop = False
 
 
 @bp.route('/arrange/<section>', methods=['GET'])
 def home(section):
-    global p
-    if p is not None:
-        p.kill()
-    p = subprocess.Popen("exec python " + LIGHTS_HOME + "child_process.py " + section, shell=True)
+    # global stop
+    # if section == "clear":
+    #     stop = True
+    # if section == "rainbowCycle":
+    #     rainbow_cycle()
+    # else:
+    c.root.exposed_arrangement(section)
+    # stop = False
     return "<h1>Indoor Lights!</h1><p>" + str(section) + "</p>"
 
 
@@ -38,7 +49,7 @@ def custom():
             + str(rgb[1]) + " " + str(rgb[0]) + " " + str(rgb[2]),
             shell=True)
 
-    return render_template(FILE_NAME_CUSTOM, context=get_context())
+    return render_template(FILE_NAME_CUSTOM, context=CONTEXT_PATH)
 
 
 @app.route('/favicon.ico')
@@ -49,10 +60,10 @@ def favicon():
 
 @bp.route('/')
 def render_home():
-    return render_template('home.html', context=get_context())
+    return render_template('home.html', context=CONTEXT_PATH)
 
 
-app.register_blueprint(bp, url_prefix=get_context())
+app.register_blueprint(bp, url_prefix=CONTEXT_PATH)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', port=WEBSERVER_PORT)
