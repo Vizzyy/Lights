@@ -21,7 +21,7 @@ def home(section):
         p.kill()
     p = subprocess.Popen("exec python3 " + LIGHTS_HOME + "child_process.py " + section, shell=True)
     return "<h1>"+get_context()+" Lights!</h1><p>" + str(section) + "</p>"
-
+sdfasdfasdfasdfadsf
 
 @bp.route('/custom/', methods=['GET'])
 def custom():
