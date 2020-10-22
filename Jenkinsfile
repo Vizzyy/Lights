@@ -5,10 +5,13 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 
 String commitHash = ""
 Boolean deploymentCheckpoint = false
-String startCommand = """cd ~/Lights; \
-git stash; git pull origin master; \
-sudo systemctl restart lights; \
-sudo systemctl status lights;"""
+String startCommand = """
+    cd ~/Lights; 
+    git stash; git checkout master; 
+    git pull origin master; 
+    sudo systemctl restart lights; 
+    sudo systemctl status lights;
+"""
 
 try {
     if (ISSUE_NUMBER)
@@ -17,6 +20,57 @@ try {
     ISSUE_NUMBER = false
     echo "Building from jenkins job..."
 }
+
+def confirmDeployed() {
+
+    Boolean deployed1 = false
+    Boolean deployed2 = false
+    for (int i = 0; i < 12; i++) {
+
+        try {
+            def health = sh(
+                    script: "curl http://herbivore:5000/outside/arrange/clear",
+                    returnStdout: true
+            ).trim()
+            echo health
+            if (health.toString().contains("<h1>Indoor Lights!</h1><p>clear</p>")) {
+                deployed1 = true
+                break
+            }
+        } catch (Exception e) {
+            echo "Could not parse health check response."
+            e.printStackTrace()
+        }
+
+        sleep time: i, unit: 'SECONDS'
+
+    }
+
+    for (int i = 0; i < 12; i++) {
+
+        try {
+            def health = sh(
+                    script: "curl http://carnivore:5000/inside/arrange/clear",
+                    returnStdout: true
+            ).trim()
+            echo health
+            if (health.toString().contains("<h1>Indoor Lights!</h1><p>clear</p>")) {
+                deployed2 = true
+                break
+            }
+        } catch (Exception e) {
+            echo "Could not parse health check response."
+            echo """$e"""
+            e.printStackTrace()
+        }
+
+        sleep time: i, unit: 'SECONDS'
+
+    }
+
+    return deployed1 && deployed2
+}
+
 
 pipeline {
     agent any
@@ -60,58 +114,11 @@ pipeline {
         stage("Confirm") {
             steps {
                 script {
-                    if (env.Deploy == "true") {
 
-                        Boolean deployed1 = false
-                        Boolean deployed2 = false
-                        for (int i = 0; i < 12; i++) {
-
-                            try {
-                                def health = sh(
-                                        script: "curl http://herbivore:5000/outside/",
-                                        returnStdout: true
-                                ).trim()
-                                echo health
-                                if (health.toString().contains("<title id=\"title\">/outside</title>")) {
-                                    deployed1 = true
-                                    break
-                                }
-                            } catch (Exception e) {
-                                echo "Could not parse health check response."
-                                e.printStackTrace()
-                            }
-
-                            sleep time: i, unit: 'SECONDS'
-
-                        }
-
-                        for (int i = 0; i < 12; i++) {
-
-                            try {
-                                def health = sh(
-                                        script: "curl http://carnivore:5000/inside/",
-                                        returnStdout: true
-                                ).trim()
-                                echo health
-                                if (health.toString().contains("<title id=\"title\">/inside</title>")) {
-                                    deployed2 = true
-                                    break
-                                }
-                            } catch (Exception e) {
-                                echo "Could not parse health check response."
-                                echo """$e"""
-                                e.printStackTrace()
-                            }
-
-                            sleep time: i, unit: 'SECONDS'
-
-                        }
-
-                        if (!(deployed1 && deployed2))
-                            error("Failed to deploy.")
+                    if (!confirmDeployed())
+                        error("Failed to deploy.")
 
 
-                    }
                 }
             }
         }
@@ -135,30 +142,33 @@ pipeline {
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
             }
         }
-//        failure {
-//            script {
-//                if (env.Build == "true" && ISSUE_NUMBER) {
-//                    prTools.comment(ISSUE_NUMBER,
-//                            """{
-//                                "body": "Jenkins failed during $currentBuild.displayName"
-//                            }""",
-//                            serviceName)
-//                }
-//                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-//                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-//                    commitHash = commitHash.substring(0, 7)
-//                    echo "Rolling back to previous successful image. Hash: $commitHash"
-//                    def cmd = """
-//                            docker stop $serviceName;
-//                            docker rm $serviceName;
-//                            docker rmi -f \$(docker images -a -q);
-//                            $startContainerCommand$commitHash
-//                        """
-//                    sh("ssh pi@carnivore.local '$cmd'")
-//                    sh("ssh pi@herbivore.local '$cmd'")
-//                }
-//            }
-//        }
+        failure {
+            script {
+                if (env.Build == "true" && ISSUE_NUMBER) {
+                    prTools.comment(ISSUE_NUMBER,
+                            """{
+                                "body": "Jenkins failed during $currentBuild.displayName"
+                            }""",
+                            serviceName)
+                }
+                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                    echo "Rolling back to previous successful image. Hash: $commitHash"
+                    GString cmd = """
+                        cd ~/Lights;
+                        git stash; 
+                        git fetch --all;
+                        git checkout $commitHash; 
+                        sudo systemctl restart lights; 
+                        sudo systemctl status lights;
+                    """
+                    sh("ssh pi@carnivore.local '$cmd'")
+                    sh("ssh pi@herbivore.local '$cmd'")
+                    if (!confirmDeployed())
+                        error("Failed to deploy.")
+                }
+            }
+        }
         cleanup { // Cleanup post-flow always executes last
             deleteDir()
         }
