@@ -93,36 +93,36 @@ pipeline {
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
             }
         }
-        failure {
-            script {
-                if (env.Build == "true" && ISSUE_NUMBER) {
-                    prTools.comment(ISSUE_NUMBER,
-                            """{
-                                "body": "Jenkins failed during $currentBuild.displayName"
-                            }""",
-                            serviceName)
-                }
-                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                    echo "Rolling back to previous successful image. Hash: $commitHash"
-                    GString cmd = """
-                        cd ~/Lights
-                        git stash
-                        git fetch --all
-                        git checkout $commitHash 
-                        sudo systemctl restart lights 
-                    """
-                    sh("ssh pi@carnivore.local '$cmd'")
-                    sh("ssh pi@herbivore.local '$cmd'")
-
-                    if (!confirmDeployed()) {
-                        sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
-                        sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
-                        error("Failed to deploy.")
-                    }
-                }
-            }
-        }
+//        failure {
+//            script {
+//                if (env.Build == "true" && ISSUE_NUMBER) {
+//                    prTools.comment(ISSUE_NUMBER,
+//                            """{
+//                                "body": "Jenkins failed during $currentBuild.displayName"
+//                            }""",
+//                            serviceName)
+//                }
+//                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+//                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+//                    echo "Rolling back to previous successful image. Hash: $commitHash"
+//                    GString cmd = """
+//                        cd ~/Lights
+//                        git stash
+//                        git fetch --all
+//                        git checkout $commitHash
+//                        sudo systemctl restart lights
+//                    """
+//                    sh("ssh pi@carnivore.local '$cmd'")
+//                    sh("ssh pi@herbivore.local '$cmd'")
+//
+//                    if (!confirmDeployed()) {
+//                        sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
+//                        sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
+//                        error("Failed to deploy.")
+//                    }
+//                }
+//            }
+//        }
         cleanup { // Cleanup post-flow always executes last
             deleteDir()
         }
