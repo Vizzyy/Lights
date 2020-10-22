@@ -57,7 +57,6 @@ pipeline {
                     if (env.Build == "true") {
                         commitHash = env.GIT_COMMIT.substring(0,7)
                         sh("""
-                            npm i --silent
                             docker build -t vizzyy/$serviceName:${commitHash} . --network=host;
                         """)
                     }
