@@ -28,7 +28,7 @@ boolean confirmDeployed() {
 
         try {
             def health = sh(
-                    script: "curl http://herbivore:5000/outside/arrange/clear",
+                    script: "curl http://herbivore:5000/outside/arrange/rainbowCycle",
                     returnStdout: true
             ).trim()
             echo health
@@ -52,7 +52,7 @@ boolean confirmDeployed() {
 
         try {
             def health = sh(
-                    script: "curl http://carnivore:5000/inside/arrange/clear",
+                    script: "curl http://carnivore:5000/inside/arrange/rainbowCycle",
                     returnStdout: true
             ).trim()
             echo health
