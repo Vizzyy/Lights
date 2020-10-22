@@ -161,5 +161,5 @@ boolean confirmDeployed() {
     echo "$result1"
     echo "$result2"
     echo "$result3"
-    return deployed1
+    return result1
 }
