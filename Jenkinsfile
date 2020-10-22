@@ -1,6 +1,6 @@
 #! groovy
 
-String serviceName = "Lights"
+String serviceName = "lights"
 currentBuild.displayName = "$serviceName [$currentBuild.number]"
 
 String commitHash = ""
