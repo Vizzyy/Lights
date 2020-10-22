@@ -156,5 +156,9 @@ boolean confirmDeployed() {
     boolean deployed1 = curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>")
     boolean deployed2 = curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
     echo deployed1.and(deployed2)
+    echo deployed1
+    echo deployed2
+    echo deployed1 && deployed2
+    echo deployed1 & deployed2
     return deployed1.and(deployed2)
 }
