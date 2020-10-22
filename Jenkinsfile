@@ -3,7 +3,8 @@
 String serviceName = "lights"
 currentBuild.displayName = "$serviceName [$currentBuild.number]"
 String commitHash = ""
-Boolean deploymentCheckpoint = false
+boolean rollBack = false
+boolean deploymentCheckpoint = false
 
 try {
     if (ISSUE_NUMBER)
@@ -23,7 +24,7 @@ pipeline {
     parameters {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
-        string(name: 'Retries', defaultValue: '10', description: 'Number of retries for status check')
+        string(name: 'Retries', defaultValue: '5', description: 'Number of retries for status check')
     }
     stages {
         stage("Acknowledge") {
@@ -67,12 +68,50 @@ pipeline {
                     if (!confirmDeployed()) {
                         sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
                         sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
-                        error("Failed to deploy.")
+                        echo "Failed to deploy."
+                        rollBack = true
+                    } else {
+                        echo "Successfully deployed."
                     }
 
                 }
             }
         }
+
+        stage("Rollback"){
+            when {
+                expression {
+                    return rollBack
+                }
+            }
+            steps {
+                script{
+
+                    if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                        commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                        echo "Rolling back to previous successful image. Hash: $commitHash"
+                        GString cmd = """
+                            cd ~/Lights
+                            git stash
+                            git fetch --all
+                            git checkout $commitHash
+                            sudo systemctl restart lights
+                        """
+                        sh("ssh pi@carnivore.local '$cmd'")
+                        sh("ssh pi@herbivore.local '$cmd'")
+
+                        if (!confirmDeployed()) {
+                            sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
+                            sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
+                            error("Failed to roll back!!!.")
+                        } else {
+                            echo "Successfully rolled back."
+                        }
+                    }
+                }
+            }
+        }
+
     }
     post {
         success {
@@ -101,27 +140,6 @@ pipeline {
                                 "body": "Jenkins failed during $currentBuild.displayName"
                             }""",
                             serviceName)
-                }
-                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-                    echo "Rolling back to previous successful image. Hash: $commitHash"
-                    GString cmd = """
-                        cd ~/Lights
-                        git stash
-                        git fetch --all
-                        git checkout $commitHash
-                        sudo systemctl restart lights
-                    """
-                    sh("ssh pi@carnivore.local '$cmd'")
-                    sh("ssh pi@herbivore.local '$cmd'")
-
-                    if (!confirmDeployed()) {
-                        sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
-                        sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
-                        error("Failed to roll back!!!.")
-                    } else {
-                        echo "Successfully rolled back."
-                    }
                 }
             }
         }
