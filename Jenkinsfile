@@ -68,7 +68,7 @@ pipeline {
 
                             try {
                                 def health = sh(
-                                        script: "curl http://herbivore:5000/outside",
+                                        script: "curl http://herbivore:5000/outside/",
                                         returnStdout: true
                                 ).trim()
                                 echo health
