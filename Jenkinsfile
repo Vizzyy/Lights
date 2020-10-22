@@ -93,36 +93,36 @@ pipeline {
                 sh "echo '${env.GIT_COMMIT}' > ~/userContent/$serviceName-last-success-hash.txt"
             }
         }
-//        failure {
-//            script {
-//                if (env.Build == "true" && ISSUE_NUMBER) {
-//                    prTools.comment(ISSUE_NUMBER,
-//                            """{
-//                                "body": "Jenkins failed during $currentBuild.displayName"
-//                            }""",
-//                            serviceName)
-//                }
-//                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
-//                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
-//                    echo "Rolling back to previous successful image. Hash: $commitHash"
-//                    GString cmd = """
-//                        cd ~/Lights
-//                        git stash
-//                        git fetch --all
-//                        git checkout $commitHash
-//                        sudo systemctl restart lights
-//                    """
-//                    sh("ssh pi@carnivore.local '$cmd'")
-//                    sh("ssh pi@herbivore.local '$cmd'")
-//
-//                    if (!confirmDeployed()) {
-//                        sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
-//                        sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
-//                        error("Failed to deploy.")
-//                    }
-//                }
-//            }
-//        }
+        failure {
+            script {
+                if (env.Build == "true" && ISSUE_NUMBER) {
+                    prTools.comment(ISSUE_NUMBER,
+                            """{
+                                "body": "Jenkins failed during $currentBuild.displayName"
+                            }""",
+                            serviceName)
+                }
+                if(deploymentCheckpoint) { // don't restart instance on failure if no deployment occured
+                    commitHash = sh(script: "cat ~/userContent/$serviceName-last-success-hash.txt", returnStdout: true)
+                    echo "Rolling back to previous successful image. Hash: $commitHash"
+                    GString cmd = """
+                        cd ~/Lights
+                        git stash
+                        git fetch --all
+                        git checkout $commitHash
+                        sudo systemctl restart lights
+                    """
+                    sh("ssh pi@carnivore.local '$cmd'")
+                    sh("ssh pi@herbivore.local '$cmd'")
+
+                    if (!confirmDeployed()) {
+                        sh("ssh pi@carnivore.local 'sudo systemctl status lights'")
+                        sh("ssh pi@herbivore.local 'sudo systemctl status lights'")
+                        error("Failed to deploy.")
+                    }
+                }
+            }
+        }
         cleanup { // Cleanup post-flow always executes last
             deleteDir()
         }
@@ -155,11 +155,6 @@ boolean curlState( String command, String status){
 boolean confirmDeployed() {
     boolean deployed1 = curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>")
     boolean deployed2 = curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
-    boolean result1 = deployed1.and(deployed2)
-    boolean result2 = deployed1 && deployed2
-    boolean result3 = deployed1 & deployed2
-    echo "$result1"
-    echo "$result2"
-    echo "$result3"
-    return result1
+    boolean result = deployed1.and(deployed2)
+    return result
 }
