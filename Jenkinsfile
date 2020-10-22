@@ -5,13 +5,7 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 
 String commitHash = ""
 Boolean deploymentCheckpoint = false
-GString startContainerCommand = "docker run --log-driver=journald \
---log-opt tag=$serviceName \
---restart always \
---privileged --cap-add SYS_RAWIO \
--d -p 5000:5000 \
--v /home/pi/Lights:/home/pi/Lights:ro \
---name $serviceName vizzyy/$serviceName:"
+String startCommand = "cd ~/Lights; git stash; git pull origin master; restartlights; statuslights;"
 
 try {
     if (ISSUE_NUMBER)
@@ -49,20 +43,20 @@ pipeline {
             }
         }
 
-        stage("Build") {
-            steps {
-                script {
-                    prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
-
-                    if (env.Build == "true") {
-                        commitHash = env.GIT_COMMIT.substring(0,7)
-                        sh("""
-                            docker build -t vizzyy/$serviceName:${commitHash} . --network=host;
-                        """)
-                    }
-                }
-            }
-        }
+//        stage("Build") {
+//            steps {
+//                script {
+//                    prTools.checkoutBranch(ISSUE_NUMBER, "vizzyy/$serviceName")
+//
+//                    if (env.Build == "true") {
+//                        commitHash = env.GIT_COMMIT.substring(0,7)
+//                        sh("""
+//                            docker build -t vizzyy/$serviceName:${commitHash} . --network=host;
+//                        """)
+//                    }
+//                }
+//            }
+//        }
 
 //        stage("Test") {
 //            steps {
@@ -86,33 +80,27 @@ pipeline {
 //            }
 //        }
 
-        stage("Deploy") {
-            steps {
-                script {
-                    if (env.Deploy == "true") {
-
-                        sh("""
-                            docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
-                            docker push vizzyy/$serviceName:${commitHash};
-                        """)
-
-                    }
-                }
-            }
-        }
+//        stage("Deploy") {
+//            steps {
+//                script {
+//                    if (env.Deploy == "true") {
+//
+//                        sh("""
+//                            docker tag vizzyy/$serviceName:${commitHash} vizzyy/$serviceName:${commitHash};
+//                            docker push vizzyy/$serviceName:${commitHash};
+//                        """)
+//
+//                    }
+//                }
+//            }
+//        }
 
         stage("Start") {
             steps {
                 script {
                     if (env.Deploy == "true") {
                         deploymentCheckpoint = true;
-                        def cmd = """
-                            docker stop $serviceName;
-                            docker rm $serviceName;
-                            docker rmi -f \$(docker images -a -q);
-                            $startContainerCommand$commitHash
-                        """
-                        sh("ssh pi@carnivore.local '$cmd'")
+                        sh("ssh pi@carnivore.local '$startCommand'")
 //                        sh("ssh pi@herbivore.local '$cmd'")
 
                     }
