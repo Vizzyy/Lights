@@ -127,7 +127,7 @@ pipeline {
 }
 
 boolean curlState( String command, String status){
-    int retries = Integer.parseInt(env.Deploy)
+    int retries = Integer.parseInt(env.Retries)
     for (int i = 0; i < retries; i++) {
 
         try {
