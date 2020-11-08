@@ -41,7 +41,7 @@ def arrangement(p, x):
     elif x == 'chaseBlue':
         theaterChase(p, Color(0, 0, 127))
     elif x == 'christmas1':
-        theaterChaseMultiColor(p, Color(235, 64, 52), Color(0, 222, 33))
+        theaterChaseMultiColor(p, Color(255, 0, 0), Color(0, 255, 0), 300, 10000)
     elif x == 'twilight':
         twilight_cycle(p)
     elif x == 'rainbow':
@@ -82,15 +82,14 @@ def theaterChase(strip, color, wait_ms=50, iterations=100):
                 strip.setPixelColor(i + q, 0)
 
 
-def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100):
-    """Movie theater light style chaser animation."""
+def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100, gap=3):
     for j in range(iterations):
-        for q in range(3):
-            for i in range(0, strip.numPixels(), 3):
+        for q in range(gap):
+            for i in range(0, strip.numPixels(), gap):
                 strip.setPixelColor(i + q, color1)
             strip.show()
             time.sleep(wait_ms / 1000.0)
-            for i in range(0, strip.numPixels(), 3):
+            for i in range(0, strip.numPixels(), gap):
                 strip.setPixelColor(i + q, color2)
 
 
