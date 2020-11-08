@@ -82,7 +82,7 @@ def theaterChase(strip, color, wait_ms=50, iterations=100):
                 strip.setPixelColor(i + q, 0)
 
 
-def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100, gap=3):
+def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100, gap=4):
     for j in range(iterations):
         for q in range(gap):
             for i in range(0, strip.numPixels(), gap):
