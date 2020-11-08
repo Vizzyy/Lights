@@ -83,10 +83,12 @@ def theaterChase(strip, color, wait_ms=50, iterations=100):
 
 
 def theater_chase_multi_color(strip, color1, color2, wait_ms=50, iterations=100, gap=4):
+    """ Create two groups of LEDs sized @gap, colored @color1 and @color2, iterating @iterations number of times,
+    with a speed of @wait_ms between cycles. """
     color_switch = True
     color_switch_counter = 0
     for j in range(iterations):
-        for q in range(gap-1):
+        for q in range((gap-1)*2):
             for i in range(0, strip.numPixels()):
                 if color_switch:
                     strip.setPixelColor(i + q, color1)
@@ -99,15 +101,6 @@ def theater_chase_multi_color(strip, color1, color2, wait_ms=50, iterations=100,
 
             strip.show()
             time.sleep(wait_ms / 1000.0)
-
-    # for j in range(iterations):
-    #     for q in range(gap):
-    #         for i in range(0, strip.numPixels(), gap):
-    #             strip.setPixelColor(i + q, color1)
-    #         strip.show()
-    #         time.sleep(wait_ms / 1000.0)
-    #         for i in range(0, strip.numPixels(), gap):
-    #             strip.setPixelColor(i + q, color2)
 
 
 def wheel(pos):
