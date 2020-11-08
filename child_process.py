@@ -86,14 +86,14 @@ def theater_chase_multi_color(strip, color1, color2, wait_ms=50, iterations=100,
     color_switch = True
     color_switch_counter = 0
     for j in range(iterations):
-        for q in range(gap):
+        for q in range(gap-1):
             for i in range(0, strip.numPixels()):
                 if color_switch:
                     strip.setPixelColor(i + q, color1)
                 else:
                     strip.setPixelColor(i + q, color2)
                 color_switch_counter += 1
-                if color_switch_counter > gap:
+                if color_switch_counter > gap-1:
                     color_switch = not color_switch
                     color_switch_counter = 0
 
