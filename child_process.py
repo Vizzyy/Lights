@@ -41,7 +41,7 @@ def arrangement(p, x):
     elif x == 'chaseBlue':
         theaterChase(p, Color(0, 0, 127))
     elif x == 'christmas1':
-        theaterChaseMultiColor(p, Color(255, 0, 0), Color(0, 255, 0), 300, 10000)
+        theater_chase_multi_color(p, Color(255, 0, 0), Color(0, 255, 0), 300, 10000)
     elif x == 'twilight':
         twilight_cycle(p)
     elif x == 'rainbow':
@@ -82,15 +82,32 @@ def theaterChase(strip, color, wait_ms=50, iterations=100):
                 strip.setPixelColor(i + q, 0)
 
 
-def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100, gap=4):
+def theater_chase_multi_color(strip, color1, color2, wait_ms=50, iterations=100, gap=4):
+    color_switch = True
+    color_switch_counter = 0
     for j in range(iterations):
         for q in range(gap):
-            for i in range(0, strip.numPixels(), 2):
-                strip.setPixelColor(i + q, color1)
+            for i in range(0, strip.numPixels()):
+                if color_switch:
+                    strip.setPixelColor(i + q, color1)
+                else:
+                    strip.setPixelColor(i + q, color2)
+                color_switch_counter += 1
+                if color_switch_counter > gap:
+                    color_switch = not color_switch
+                    color_switch_counter = 0
+
             strip.show()
             time.sleep(wait_ms / 1000.0)
-            for i in range(0, strip.numPixels(), 3):
-                strip.setPixelColor(i + q, color2)
+
+    # for j in range(iterations):
+    #     for q in range(gap):
+    #         for i in range(0, strip.numPixels(), gap):
+    #             strip.setPixelColor(i + q, color1)
+    #         strip.show()
+    #         time.sleep(wait_ms / 1000.0)
+    #         for i in range(0, strip.numPixels(), gap):
+    #             strip.setPixelColor(i + q, color2)
 
 
 def wheel(pos):
