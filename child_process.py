@@ -85,12 +85,12 @@ def theaterChase(strip, color, wait_ms=50, iterations=100):
 def theaterChaseMultiColor(strip, color1, color2, wait_ms=50, iterations=100, gap=4):
     for j in range(iterations):
         for q in range(gap):
-            for i in range(0, strip.numPixels(), gap):
+            for i in range(0, strip.numPixels(), 4):
                 strip.setPixelColor(i + q, color1)
             strip.show()
             time.sleep(wait_ms / 1000.0)
-            # for i in range(0, strip.numPixels(), gap):
-            #     strip.setPixelColor(i + q, color2)
+            for i in range(0, strip.numPixels(), 2):
+                strip.setPixelColor(i + q, color2)
 
 
 def wheel(pos):
