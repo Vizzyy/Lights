@@ -5,7 +5,6 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 String commitHash = ""
 boolean rollBack = false
 boolean deploymentCheckpoint = false
-String lightsOption = "christmas1"
 
 try {
     if (ISSUE_NUMBER)
@@ -26,6 +25,7 @@ pipeline {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
         string(name: 'Retries', defaultValue: '5', description: 'Number of retries for status check')
+        string(name: 'LightsOption', defaultValue: 'christmas1', description: 'Option to toggle during confirm step')
     }
     stages {
         stage("Acknowledge") {
@@ -174,7 +174,10 @@ boolean curlState( GString command, GString status){
 }
 
 boolean confirmDeployed() {
-    if (!curlState("curl http://carnivore:5000/inside/arrange/$lightsOption", "<h1>/inside Lights!</h1><p>$lightsOption</p>"))
+    String lightsOption = env.LightsOption
+    if (!curlState("curl http://carnivore:5000/inside/arrange/$lightsOption",
+            "<h1>/inside Lights!</h1><p>$lightsOption</p>"))
         return false
-    return curlState("curl http://herbivore:5000/outside/arrange/$lightsOption","<h1>/outside Lights!</h1><p>$lightsOption</p>")
+    return curlState("curl http://herbivore:5000/outside/arrange/$lightsOption",
+            "<h1>/outside Lights!</h1><p>$lightsOption</p>")
 }
