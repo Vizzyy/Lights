@@ -41,7 +41,7 @@ def arrangement(p, x):
     elif x == 'chaseBlue':
         theaterChase(p, Color(0, 0, 127))
     elif x == 'christmas1':
-        theater_chase_multi_color(p, Color(255, 0, 0), Color(0, 255, 0), 300, 10000)
+        theater_chase_multi_color(p, Color(255, 0, 0), Color(0, 255, 0), 1000, 10000)
     elif x == 'twilight':
         twilight_cycle(p)
     elif x == 'rainbow':

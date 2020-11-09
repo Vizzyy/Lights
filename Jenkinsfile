@@ -5,6 +5,7 @@ currentBuild.displayName = "$serviceName [$currentBuild.number]"
 String commitHash = ""
 boolean rollBack = false
 boolean deploymentCheckpoint = false
+String lightsOption = "christmas1"
 
 try {
     if (ISSUE_NUMBER)
@@ -149,7 +150,7 @@ pipeline {
     }
 }
 
-boolean curlState( String command, String status){
+boolean curlState( GString command, GString status){
     int retries = Integer.parseInt(env.Retries)
     for (int i = 0; i < retries; i++) {
 
@@ -173,7 +174,7 @@ boolean curlState( String command, String status){
 }
 
 boolean confirmDeployed() {
-    if (!curlState("curl http://carnivore:5000/inside/arrange/rainbowCycle", "<h1>/inside Lights!</h1><p>rainbowCycle</p>"))
+    if (!curlState("curl http://carnivore:5000/inside/arrange/$lightsOption", "<h1>/inside Lights!</h1><p>$lightsOption</p>"))
         return false
-    return curlState("curl http://herbivore:5000/outside/arrange/rainbowCycle","<h1>/outside Lights!</h1><p>rainbowCycle</p>")
+    return curlState("curl http://herbivore:5000/outside/arrange/$lightsOption","<h1>/outside Lights!</h1><p>$lightsOption</p>")
 }
