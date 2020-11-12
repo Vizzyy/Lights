@@ -25,7 +25,7 @@ pipeline {
         booleanParam(name: 'Build', defaultValue: true, description: 'Build latest artifact')
         booleanParam(name: 'Deploy', defaultValue: true, description: 'Deploy latest artifact')
         string(name: 'Retries', defaultValue: '5', description: 'Number of retries for status check')
-        string(name: 'LightsOption', defaultValue: 'christmas1', description: 'Option to toggle during confirm step')
+        string(name: 'LightsOption', defaultValue: 'rainbowCycle', description: 'Option to toggle during confirm step')
     }
     stages {
         stage("Acknowledge") {
