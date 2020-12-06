@@ -23,6 +23,15 @@ def home(section):
     return "<h1>"+get_context()+" Lights!</h1><p>" + str(section) + "</p>"
 
 
+@bp.route('/status', methods=['GET'])
+def status():
+    global p
+    if p is not None:
+        return "Subprocess running."
+    else:
+        return "No subprocess."
+
+
 @bp.route('/custom/', methods=['GET'])
 def custom():
     if request.args.get('colorValue'):
