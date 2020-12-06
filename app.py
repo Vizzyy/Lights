@@ -27,7 +27,10 @@ def home(section):
 def status():
     global p
     if p is not None:
-        state = "still running." if p.poll() is not None else "finished running."
+        print(p)
+        print(p.poll())
+        print(p.args)
+        state = f"running {p.args}." if p.poll() is not None else "finished running."
         return f"Subprocess {state}"
     else:
         return "No subprocess initialized."
