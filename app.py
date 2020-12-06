@@ -27,9 +27,10 @@ def home(section):
 def status():
     global p
     if p is not None:
-        return f"Subprocess {p.poll()}"
+        state = "still running." if p.poll() is not None else "finished running."
+        return f"Subprocess {state}"
     else:
-        return "No subprocess."
+        return "No subprocess initialized."
 
 
 @bp.route('/custom/', methods=['GET'])
