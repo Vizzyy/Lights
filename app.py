@@ -27,7 +27,7 @@ def home(section):
 def status():
     global p
     if p is not None:
-        return "Subprocess running."
+        return f"Subprocess {p.poll()}"
     else:
         return "No subprocess."
 
